@@ -1,0 +1,207 @@
+#######################################
+# Alacritty Configuration - Optimized Build
+# System: Arch Linux + KDE Plasma
+# Author: User 01
+#######################################
+
+# ------------------------------
+# Window Settings
+# ------------------------------
+[window]
+dimensions      = { columns = 110, lines = 28 }
+padding         = { x = 10, y = 10 }
+dynamic_padding = true
+dynamic_title   = true
+opacity         = 0.75
+blur            = true
+decorations     = "Full"
+startup_mode    = "Windowed"  # Options: "Windowed" | "Maximized" | "Fullscreen"
+
+# ------------------------------
+# Font Configuration
+# ------------------------------
+[font]
+normal       = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold         = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic       = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic  = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+size         = 10.5
+offset       = { x = 0, y = 1 }
+glyph_offset = { x = 0, y = 1 }
+
+# ------------------------------
+# Shell
+# ------------------------------
+[terminal.shell]
+# program = "/usr/bin/zsh"
+# program = "zellij"
+program = "fish"
+
+# ------------------------------
+# Environment
+# ------------------------------
+[env]
+TERM = "xterm-256color"
+
+# ------------------------------
+# Scrolling
+# ------------------------------
+[scrolling]
+history = 10000
+
+# ------------------------------
+# Cursor Settings
+# ------------------------------
+[cursor]
+style            = { shape = "underline", blinking = "On" }
+blink_interval   = 500
+blink_timeout    = 0
+unfocused_hollow = true
+
+# ------------------------------
+# Bell Behavior
+# ------------------------------
+[bell]
+animation = "EaseOut"
+duration  = 0
+color     = "#000000"
+command   = "None"
+
+# ------------------------------
+# Colors - Catppuccin Mocha Theme
+# ------------------------------
+[colors.primary]
+background = "#1e1e2e"
+foreground = "#cdd6f4"
+
+[colors.normal]
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#cba6f7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
+
+[colors.bright]
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#cba6f7"
+cyan    = "#94e2d5"
+white   = "#a6adc8"
+
+[colors.dim]
+black   = "#313244"
+red     = "#e87497"
+green   = "#8ccf7e"
+yellow  = "#e7c787"
+blue    = "#6aa8fa"
+magenta = "#b68cf7"
+cyan    = "#84d1c5"
+white   = "#9399b2"
+
+[colors.cursor]
+text   = "CellBackground"
+cursor = "#f5c2e7"
+
+[colors.selection]
+text        = "#1e1e2e"
+background  = "#f5e0dc"
+
+[colors.search]
+matches        = { foreground = "#1e1e2e", background = "#a6e3a1" }
+focused_match  = { foreground = "#1e1e2e", background = "#f38ba8" }
+
+# ------------------------------
+# Selection Behavior
+# ------------------------------
+[selection]
+semantic_escape_chars = ",│`|:\"' ()[]{}<>\t"
+
+# ------------------------------
+# Keyboard Shortcuts
+# ------------------------------
+[[keyboard.bindings]]
+key = "V"
+mods = "Control|Shift"
+action = "Paste"
+
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "N"
+mods = "Control|Shift"
+action = "CreateNewWindow"
+
+[[keyboard.bindings]]
+key = "W"
+mods = "Control|Shift"
+action = "Quit"
+
+[[keyboard.bindings]]
+key = "Plus"
+mods = "Control"
+action = "IncreaseFontSize"
+
+[[keyboard.bindings]]
+key = "Minus"
+mods = "Control"
+action = "DecreaseFontSize"
+
+[[keyboard.bindings]]
+key = "0"
+mods = "Control"
+action = "ResetFontSize"
+
+[[keyboard.bindings]]
+key = "F"
+mods = "Control|Shift"
+action = "ToggleFullscreen"
+
+[[keyboard.bindings]]
+key = "PageUp"
+mods = "Shift"
+action = "ScrollPageUp"
+
+[[keyboard.bindings]]
+key = "PageDown"
+mods = "Shift"
+action = "ScrollPageDown"
+
+[[keyboard.bindings]]
+key = "Home"
+mods = "Shift"
+action = "ScrollToTop"
+
+[[keyboard.bindings]]
+key = "End"
+mods = "Shift"
+action = "ScrollToBottom"
+
+[[keyboard.bindings]]
+key = "F"
+mods = "Control"
+action = "SearchForward"
+
+[[keyboard.bindings]]
+key = "B"
+mods = "Control"
+action = "SearchBackward"
+
+[[keyboard.bindings]]
+key = "T"
+mods = "Shift"
+action = "SpawnNewInstance"
+
+# ------------------------------
+# Debugging
+# ------------------------------
+[debug]
+print_events = false
