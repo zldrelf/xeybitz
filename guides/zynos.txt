@@ -1,0 +1,231 @@
+ZYNOS
+Arch / EndeavourOS Setup & Maintenance Guide
+===========================================
+
+Purpose
+-------
+A clean, minimal, and maintainable reference for installing, configuring,
+and maintaining an Arch / EndeavourOS system. No fluff. No magic. Just ops.
+
+--------------------------------------------------
+1. Network Setup (Wi‑Fi using iwd)
+--------------------------------------------------
+Goal: Lightweight, fast Wi‑Fi without NetworkManager.
+
+Commands:
+iwctl
+device list
+station wlan0 scan
+station wlan0 get-networks
+station wlan0 connect "wifi-name"
+
+Notes:
+- Interface name may differ (check with device list)
+- Ideal for laptops and minimal systems
+
+--------------------------------------------------
+2. Mirror Ranking (Pacman Speed & Reliability)
+--------------------------------------------------
+Goal: Faster downloads and fewer failed updates.
+
+Commands:
+sudo cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+sudo reflector --country 'United States,India,Singapore'   --latest 20 --protocol https --sort score   --save /etc/pacman.d/mirrorlist
+
+Best Practice:
+- Run once every 1–2 months
+
+--------------------------------------------------
+3. Pacman Configuration
+--------------------------------------------------
+Edit /etc/pacman.conf and enable:
+
+Color
+ILoveCandy
+VerbosePkgLists
+ParallelDownloads = 5
+
+Why:
+- Faster updates
+- Better visibility
+- Cleaner output
+
+--------------------------------------------------
+4. AUR Helper (paru)
+--------------------------------------------------
+Goal: Controlled and transparent AUR usage.
+
+Commands:
+sudo pacman -S --needed base-devel
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
+
+Policy:
+pacman → flatpak → nix → AUR (last resort)
+
+--------------------------------------------------
+5. Core System Packages (pacman)
+--------------------------------------------------
+sudo pacman -S --needed \
+ git fish fastfetch btop zellij tmux fzf nnn \
+ vulkan-radeon go rust zed syncthing \
+ firewalld firejail helix vim kamoso timeshift \
+ ttf-firacode-nerd kwalletmanager kdeconnect filelight \
+ nix alacritty flatpak proton-vpn-cli virtualbox \
+ partitionmanager signal-desktop audacious torbrowser-launcher \
+ okular bat fd ripgrep p7zip kate kwrite gwenview chromium \
+ man-db man-pages base-devel amd-ucode mesa dosfstools ntfs-3g exfatprogs \
+ p7zip unzip unrar tar bash-completion rsync dmidecode
+
+Notes:
+- firejail = sandboxing
+- timeshift = rollback safety
+- fish + tmux/zellij = modern shell workflow
+
+--------------------------------------------------
+6. AUR Applications (Binary Preferred)
+--------------------------------------------------
+paru -Syu --needed \
+ brave-bin librewolf-bin ani-cli vscodium-bin
+
+Rule:
+- Prefer *-bin unless compilation is required
+
+--------------------------------------------------
+7. Nix Package Manager (Side-by-Side)
+--------------------------------------------------
+Goal: Isolated, reproducible tools without polluting Arch.
+
+Config: /etc/nix/nix.conf
+build-users-group = nixbld
+experimental-features = nix-command flakes
+
+Common Commands:
+nix-channel --update
+nix profile install nixpkgs#<package>
+nix profile remove nixpkgs#firefox
+nix profile list
+nix profile rollback
+nix search nixpkgs obsidian
+
+Maintenance:
+nix-collect-garbage
+nix-collect-garbage -d
+nix-store --gc
+nix-store --verify --repair
+
+System-wide tools:
+sudo nix profile add nixpkgs#ani-cli
+sudo nix profile add nixpkgs#oniux
+sudo nix profile add nixpkgs#llama-cpp
+
+--------------------------------------------------
+8. Firewall (firewalld + KDE)
+--------------------------------------------------
+sudo pacman -S --needed firewalld plasma-firewall python-pyqt6
+sudo systemctl enable --now firewalld
+sudo firewall-cmd --set-default-zone=public
+sudo firewall-cmd --permanent --add-service=dhcpv6-client
+sudo firewall-cmd --reload
+
+Why:
+- Zone-based rules
+- Dynamic configuration
+- KDE integration
+
+--------------------------------------------------
+9. VirtualBox Setup
+--------------------------------------------------
+sudo pacman -S virtualbox virtualbox-host-modules-arch
+
+OR (custom kernels recommended):
+sudo pacman -S virtualbox-host-dkms linux-lts-headers
+sudo modprobe vboxdrv
+
+--------------------------------------------------
+10. Syncthing
+--------------------------------------------------
+sudo pacman -S --needed syncthing
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
+
+Web UI:
+http://localhost:8384
+
+--------------------------------------------------
+11. GPG & KWallet
+--------------------------------------------------
+sudo pacman -S gnupg pinentry-qt
+gpg --full-generate-key
+gpg --list-secret-keys
+
+Key Settings:
+- RSA & RSA
+- 4096 bits
+- No expiration
+
+Then:
+- Open KWallet Manager
+- Create GPG-encrypted wallet
+
+--------------------------------------------------
+12. Flatpak Applications
+--------------------------------------------------
+flatpak remote-add --if-not-exists flathub  https://flathub.org/repo/flathub.flatpakrepo
+
+flatpak install -y flathub com.rtosta.zapzap org.onlyoffice.desktopeditors com.github.ADBeveridge.Raiderorg.qbittorrent.qBittorrent org.keepassxc.KeePassXC org.cryptomator.Cryptomator io.ente.auth io.ente.photos io.github.giantpinkrobots.flatsweep org.mozilla.Thunderbird org.telegram.desktop org.kde.tokodon md.obsidian.Obsidian com.github.unrud.VideoDownloader app.zen_browser.zen ai.jan.Janio.gitlab.theevilskeleton.Upscaler
+
+Rule:
+- Use Flatpak for GUI apps with limited system access needs
+
+--------------------------------------------------
+13. Firmware Updates
+--------------------------------------------------
+sudo pacman -S --needed fwupd
+sudo fwupdmgr refresh
+sudo fwupdmgr get-updates
+sudo fwupdmgr update
+
+WARNING:
+- Always plug in charger before firmware updates
+
+--------------------------------------------------
+14. Bootloader & Initramfs
+--------------------------------------------------
+sudo bootctl update
+bootctl list
+sudo mkinitcpio -P
+
+--------------------------------------------------
+15. Backup & Recovery
+--------------------------------------------------
+pacman -Qqe > pkglist.txt
+sudo tar czf etc-backup.tar.gz /etc
+
+Recommendation:
+- Track dotfiles using Git
+
+--------------------------------------------------
+16. System Maintenance Checklist
+--------------------------------------------------
+System update:
+sudo pacman -Syu
+paru -Syu
+flatpak update
+
+Cleanup:
+sudo paccache -rk3
+paru -Sc
+
+Orphans (dry run first):
+pacman -Qtdq
+sudo pacman -Rns $(pacman -Qtdq)
+
+Post-update:
+sudo mkinitcpio -P
+sudo bootctl update
+
+--------------------------------------------------
+End of Document
+--------------------------------------------------
